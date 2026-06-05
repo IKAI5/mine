@@ -1,0 +1,271 @@
+:root {
+  color-scheme: light;
+  --bg: #f7f3ea;
+  --panel: #fffdf7;
+  --ink: #17212b;
+  --muted: #66717d;
+  --line: #d8d0c1;
+  --tile: #b8c7b3;
+  --tile-hover: #a9bfa6;
+  --tile-open: #ece4d4;
+  --accent: #0f766e;
+  --danger: #bd2d28;
+  --flag: #d97706;
+  --shadow: 0 18px 45px rgba(23, 33, 43, 0.14);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(120deg, rgba(15, 118, 110, 0.12), transparent 38%),
+    linear-gradient(280deg, rgba(217, 119, 6, 0.12), transparent 40%),
+    var(--bg);
+  color: var(--ink);
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(1120px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 680px) minmax(260px, 1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.game-panel,
+.side-panel {
+  background: rgba(255, 253, 247, 0.9);
+  border: 1px solid rgba(216, 208, 193, 0.9);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.game-panel {
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.side-panel {
+  display: grid;
+  gap: 20px;
+  align-self: stretch;
+  align-content: center;
+  padding: 24px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1;
+}
+
+h2 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.icon-button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.icon-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.status-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.status-strip > div {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.status-strip strong {
+  display: block;
+  min-height: 1.4em;
+  overflow-wrap: anywhere;
+}
+
+.board-wrap {
+  display: grid;
+  place-items: center;
+}
+
+.board {
+  width: min(100%, 560px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #7b8b75;
+  user-select: none;
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 4px;
+  background: var(--tile);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: clamp(1rem, 5vw, 2rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.cell:hover:not(:disabled) {
+  background: var(--tile-hover);
+}
+
+.cell.open {
+  background: var(--tile-open);
+  cursor: default;
+}
+
+.cell.flagged {
+  color: var(--flag);
+}
+
+.cell.mine {
+  background: #f2b8ad;
+  color: var(--danger);
+}
+
+.cell[data-number="1"] {
+  color: #2563eb;
+}
+
+.cell[data-number="2"] {
+  color: #15803d;
+}
+
+.cell[data-number="3"] {
+  color: #b91c1c;
+}
+
+.cell[data-number="4"] {
+  color: #4338ca;
+}
+
+.cell[data-number="5"],
+.cell[data-number="6"],
+.cell[data-number="7"],
+.cell[data-number="8"] {
+  color: #7c2d12;
+}
+
+.records {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.records li {
+  margin: 8px 0;
+}
+
+.muted,
+.firebase-state p {
+  color: var(--muted);
+}
+
+.firebase-state p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 840px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 18px 0;
+  }
+
+  .side-panel {
+    align-self: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-shell {
+    width: min(100% - 20px, 1120px);
+  }
+
+  .game-panel,
+  .side-panel {
+    padding: 14px;
+  }
+
+  .status-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .board {
+    gap: 3px;
+    padding: 4px;
+  }
+}
