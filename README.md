@@ -20,7 +20,7 @@
 2. Build 메뉴에서 Realtime Database를 생성합니다.
 3. Firebase 콘솔의 웹 앱 설정값을 `firebase-config.js`에 입력합니다.
 4. `databaseURL` 값도 반드시 입력합니다. 예: `https://프로젝트ID-default-rtdb.firebaseio.com`
-5. 저장 경로는 `minesweeperRecords`입니다.
+5. 저장 경로는 `minesweeperRecords`이며, 화면에는 `seconds` 오름차순 TOP 10 기록이 표시됩니다.
 
 Firebase 웹 설정값은 앱 식별용 공개 값입니다. 실제 보안은 Realtime Database 보안 규칙에서 관리하세요.
 

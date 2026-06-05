@@ -1,6 +1,7 @@
 const SIZE = 9;
 const MINE_COUNT = 10;
 const TOTAL_CELLS = SIZE * SIZE;
+const RECORD_LIMIT = 10;
 const RECORD_KEY = "minesweeper-records";
 
 const boardEl = document.querySelector("#board");
@@ -243,7 +244,7 @@ function readLocalRecords() {
 }
 
 function writeLocalRecords(records) {
-  localStorage.setItem(RECORD_KEY, JSON.stringify(records.slice(0, 5)));
+  localStorage.setItem(RECORD_KEY, JSON.stringify(records.slice(0, RECORD_LIMIT)));
 }
 
 async function saveRecord(seconds) {
@@ -256,12 +257,15 @@ async function saveRecord(seconds) {
 
   state.records = [record, ...state.records]
     .sort((a, b) => a.seconds - b.seconds)
-    .slice(0, 5);
+    .slice(0, RECORD_LIMIT);
   writeLocalRecords(state.records);
   renderRecords();
 
   if (state.firebase) {
     await state.firebase.save(record);
+    state.records = await state.firebase.loadTopRecords();
+    writeLocalRecords(state.records);
+    renderRecords();
   }
 }
 
@@ -310,15 +314,18 @@ async function setupFirebase() {
         const newRecordRef = push(recordsRef);
         await set(newRecordRef, record);
       },
+      async loadTopRecords() {
+        const snapshot = await get(
+          query(recordsRef, orderByChild("seconds"), limitToFirst(RECORD_LIMIT)),
+        );
+        return snapshot.exists()
+          ? Object.values(snapshot.val()).sort((a, b) => a.seconds - b.seconds)
+          : [];
+      },
     };
 
-    const snapshot = await get(
-      query(recordsRef, orderByChild("seconds"), limitToFirst(5)),
-    );
-    const cloudRecords = snapshot.exists() ? Object.values(snapshot.val()) : [];
-    state.records = [...cloudRecords, ...state.records]
-      .sort((a, b) => a.seconds - b.seconds)
-      .slice(0, 5);
+    state.records = await state.firebase.loadTopRecords();
+    writeLocalRecords(state.records);
 
     firebaseStatusEl.textContent = "Firebase Realtime Database에 기록 저장 중";
     renderRecords();
