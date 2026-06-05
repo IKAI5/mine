@@ -322,7 +322,8 @@ async function setupFirebase() {
 
     firebaseStatusEl.textContent = "Firebase Realtime Database에 기록 저장 중";
     renderRecords();
-  } catch {
+  } catch (error) {
+    console.error(error);
     firebaseStatusEl.textContent =
       "Firebase Realtime Database 설정 전입니다. firebase-config.js를 채우면 기록 저장이 연결됩니다.";
   }
