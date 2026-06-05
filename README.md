@@ -14,13 +14,29 @@
 
 별도 설치 없이 `index.html`을 브라우저에서 열면 실행됩니다.
 
-## Firebase 연결
+## Firebase Realtime Database 연결
 
-1. Firebase 콘솔에서 웹 앱을 만들고 Firestore Database를 활성화합니다.
-2. Firebase 콘솔의 웹 앱 설정값을 `firebase-config.js`에 입력합니다.
-3. Firestore 컬렉션 이름은 `minesweeperRecords`입니다.
+1. Firebase 콘솔에서 웹 앱을 만듭니다.
+2. Build 메뉴에서 Realtime Database를 생성합니다.
+3. Firebase 콘솔의 웹 앱 설정값을 `firebase-config.js`에 입력합니다.
+4. `databaseURL` 값도 반드시 입력합니다. 예: `https://프로젝트ID-default-rtdb.firebaseio.com`
+5. 저장 경로는 `minesweeperRecords`입니다.
 
-Firebase 웹 설정값은 앱 식별용 공개 값입니다. 실제 보안은 Firestore 보안 규칙에서 관리하세요.
+Firebase 웹 설정값은 앱 식별용 공개 값입니다. 실제 보안은 Realtime Database 보안 규칙에서 관리하세요.
+
+개발 중 빠른 테스트용 규칙 예시는 아래와 같습니다. 공개 배포 전에는 인증 기반 규칙으로 바꾸는 것을 권장합니다.
+
+```json
+{
+  "rules": {
+    "minesweeperRecords": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": ["seconds"]
+    }
+  }
+}
+```
 
 ## Vercel 배포
 

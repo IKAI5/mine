@@ -283,39 +283,48 @@ async function setupFirebase() {
   try {
     const configModule = await import("./firebase-config.js");
 
-    if (!configModule.firebaseConfig?.apiKey) {
+    if (!configModule.firebaseConfig?.apiKey || !configModule.firebaseConfig?.databaseURL) {
       throw new Error("Firebase config is empty");
     }
 
     const { initializeApp } = await import(
       "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"
     );
-    const { getFirestore, addDoc, collection, getDocs, limit, orderBy, query } =
-      await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+    const {
+      getDatabase,
+      ref,
+      push,
+      set,
+      get,
+      limitToFirst,
+      orderByChild,
+      query,
+    } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js");
 
     const app = initializeApp(configModule.firebaseConfig);
-    const db = getFirestore(app);
-    const recordsCollection = collection(db, "minesweeperRecords");
+    const db = getDatabase(app);
+    const recordsRef = ref(db, "minesweeperRecords");
 
     state.firebase = {
       async save(record) {
-        await addDoc(recordsCollection, record);
+        const newRecordRef = push(recordsRef);
+        await set(newRecordRef, record);
       },
     };
 
-    const snapshot = await getDocs(
-      query(recordsCollection, orderBy("seconds", "asc"), limit(5)),
+    const snapshot = await get(
+      query(recordsRef, orderByChild("seconds"), limitToFirst(5)),
     );
-    const cloudRecords = snapshot.docs.map((doc) => doc.data());
+    const cloudRecords = snapshot.exists() ? Object.values(snapshot.val()) : [];
     state.records = [...cloudRecords, ...state.records]
       .sort((a, b) => a.seconds - b.seconds)
       .slice(0, 5);
 
-    firebaseStatusEl.textContent = "Firebase Firestore에 기록 저장 중";
+    firebaseStatusEl.textContent = "Firebase Realtime Database에 기록 저장 중";
     renderRecords();
   } catch {
     firebaseStatusEl.textContent =
-      "Firebase 설정 전입니다. firebase-config.js를 만들면 기록 저장이 연결됩니다.";
+      "Firebase Realtime Database 설정 전입니다. firebase-config.js를 채우면 기록 저장이 연결됩니다.";
   }
 }
 
