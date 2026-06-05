@@ -312,6 +312,16 @@ async function setupFirebase() {
       },
     };
 
+    try {
+      await state.firebase.save({
+        seconds: 999,
+        createdAt: Date.now(),
+      });
+      console.log("TEST SAVE SUCCESS");
+    } catch (error) {
+      console.error(error);
+    }
+
     const snapshot = await get(
       query(recordsRef, orderByChild("seconds"), limitToFirst(5)),
     );
